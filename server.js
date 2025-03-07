@@ -27,6 +27,7 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 // Define Routes
+app.use('/api/user', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/invoices', invoiceRoutes);
 app.use('/api/receipts', receiptRoutes);

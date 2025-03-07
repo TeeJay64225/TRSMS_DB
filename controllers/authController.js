@@ -35,4 +35,7 @@ const loginUser = async (req, res) => {
     }
 };
 
+const user = new User({ name, phone, password, role });
+await user.save(); // This will trigger bcrypt hashing
+
 module.exports = { registerUser, loginUser };
