@@ -1,11 +1,11 @@
 const express = require('express');
-const { protect } = require('../middleware/authMiddleware');  // ✅ Import middleware
-const { getUsers, getUserById } = require('../controllers/userController');  // ✅ Import user controllers
-const User = require('../models/userModel'); // ✅ Corrected import
+const { protect } = require('../middleware/authMiddleware');  
+const { getUsers, getUserById } = require('../controllers/userController');  
+const User = require('../models/userModel'); // ✅ Ensure correct import
 
 const router = express.Router();
 
-// Get total user count
+// ✅ Define `/count` first
 router.get('/count', async (req, res) => {
     try {
         const totalUsers = await User.countDocuments();
@@ -16,10 +16,8 @@ router.get('/count', async (req, res) => {
     }
 });
 
-// Get all users (protected)
+// ✅ Other user routes
 router.get('/', protect, getUsers);
-
-// Get a user by ID (protected)
 router.get('/:id', protect, getUserById);
 
 module.exports = router;
