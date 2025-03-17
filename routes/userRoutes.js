@@ -1,14 +1,11 @@
 const express = require('express');
-const { protect } = require('../middleware/authMiddleware');  // ✅ Import middleware
-const { getUsers, getUserById } = require('../controllers/userController');  // ✅ Import user controllers
+const { protect } = require('../middleware/authMiddleware');  
+const { getUsers, getUserById } = require('../controllers/userController');  
+const User = require('../models/User'); // ✅ Ensure correct import
 
 const router = express.Router();
 
-// Define user-related routes
-router.get('/', protect, getUsers);   // Get all users (protected)
-router.get('/:id', protect, getUserById);  // Get a user by ID (protected)
-
-
+// ✅ Move this route **above** the `/:id` route
 router.get('/count', async (req, res) => {
     try {
         const totalUsers = await User.countDocuments();
@@ -18,5 +15,9 @@ router.get('/count', async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 });
+
+// ✅ Define user-related routes
+router.get('/', protect, getUsers);   // Get all users (protected)
+router.get('/:id', protect, getUserById);  // Get a user by ID (protected)
 
 module.exports = router;
