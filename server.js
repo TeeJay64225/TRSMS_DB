@@ -32,15 +32,13 @@ const invoiceRoutes = require('./routes/invoiceRoutes');
 const receiptRoutes = require('./routes/receiptRoutes');
 const logRoutes = require("./routes/logRoutes");
 
-
 // Define Routes
-app.use('/api/auth', authRoutes); // Changed from `/api/user`
+app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/invoices', invoiceRoutes);
 app.use('/api/receipts', receiptRoutes);
-app.use('/api/clients', clientRoutes); // Use one consistent route
-app.use("/api/logs", logRoutes);
-
+app.use('/api/clients', clientRoutes);
+app.use("/api/logs", logRoutes); // ✅ Logs Endpoint
 
 // Health check endpoint
 app.get('/', (req, res) => {

@@ -22,36 +22,45 @@ const registerUser = async (req, res) => {
         await user.save();
 
         // Log registration
-        await createLog(user._id, "User Registered", `User ${user.name} was registered.`);
+        await createLog(user._id, "User Registration", `New user ${user.name} (Phone: ${user.phone}) registered.`);
 
-        res.status(201).json({ message: 'User registered successfully', user });
+        res.status(201).json({ message: "User registered successfully", user });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        console.error("Registration Error:", error);
+        res.status(500).json({ error: "Internal Server Error" });
     }
 };
 
 const loginUser = async (req, res) => {
     try {
         const { phone, password } = req.body;
-        const user = await User.findOne({ phone });
 
+        // Check if user exists
+        const user = await User.findOne({ phone });
         if (!user) {
-            throw new Error('Invalid credentials');
+            return res.status(400).json({ error: "Invalid credentials" });
         }
 
+        // Validate password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            throw new Error('Invalid credentials');
+            return res.status(400).json({ error: "Invalid credentials" });
         }
 
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+        // Generate JWT Token
+        const token = jwt.sign(
+            { id: user._id, role: user.role },
+            process.env.JWT_SECRET || "default_secret",
+            { expiresIn: "7d" }
+        );
 
-        // Log login
-        await createLog(user._id, "User Login", `User ${user.name} logged in.`);
+        // Log login activity
+        await createLog(user._id, "User Login", `User ${user.name} (Phone: ${user.phone}) logged in.`);
 
-        res.json({ user, token });
+        res.json({ message: "Login successful", user, token });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        console.error("Login Error:", error);
+        res.status(500).json({ error: "Internal Server Error" });
     }
 };
 
