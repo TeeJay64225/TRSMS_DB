@@ -1,18 +1,19 @@
 const express = require('express');
-const router = express.Router();
 const { protect } = require('../middleware/authMiddleware');
 const {
     createInvoice,
     getInvoices,
     getInvoiceById,
     updateInvoice,
-    deleteInvoice,
+    deleteInvoice
 } = require('../controllers/invoiceController');
 
-router.post('/', protect, createInvoice);          // Create an invoice
-router.get('/', protect, getInvoices);            // Get all invoices
-router.get('/:id', protect, getInvoiceById);      // Get a single invoice by ID
-router.put('/:id', protect, updateInvoice);       // Update an invoice
-router.delete('/:id', protect, deleteInvoice);    // Delete an invoice
+const router = express.Router();
 
-module.exports = router;
+router.post('/', protect, createInvoice);
+router.get('/', protect, getInvoices);
+router.get('/:id', protect, getInvoiceById);
+router.put('/:id', protect, updateInvoice);
+router.delete('/:id', protect, deleteInvoice);
+
+module.exports = router;  // ✅ Correct export
